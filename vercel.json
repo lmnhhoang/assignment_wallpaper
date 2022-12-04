@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "wallpaper-project",
+  "builds": [
+    { "src": "app.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/app.js" }
+  ]
+}
