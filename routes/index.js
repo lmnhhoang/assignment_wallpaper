@@ -68,9 +68,12 @@ router.post('/upload', imageUpload.single('image'),function(req, res, next) {
     title: req.body.name,
     desc: req.body.desc,
     img: {
-      url: path.join(__dirname, '../' + '/public/upload/' + req.file.filename),
+//       url: path.join(__dirname, '../' + '/public/upload/' + req.file.filename),
+//       contentType: req.file.mimetype,
+//       thumbnail: path.join(__dirname, '../' + '/public/upload/150x150-' + req.file.filename)
+      url: './public/upload/' + req.file.filename,
       contentType: req.file.mimetype,
-      thumbnail: path.join(__dirname, '../' + '/public/upload/150x150-' + req.file.filename)
+      thumbnail: './public/upload/150x150-' + req.file.filename
     },
     createDate: Date.now()
   }
