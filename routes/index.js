@@ -43,15 +43,36 @@ const imageUpload = multer({
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  imgModel.find({}, (err, items) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send('An error occurred', err);
-    }
-    else {
-      res.render('index', { items: items});
-    }
-  });
+  let perPage = 10;
+  imgModel
+      .find()
+      .limit(perPage)
+      .exec((err, items) => {
+        imgModel.countDocuments((err, count) => {
+          if (err) return next(err);
+          res.render('index', {
+            items
+          });
+        });
+      });
+});
+router.get('/lists/:page', function(req, res, next) {
+  let perPage = 10;
+  let page = req.params.page || 1;
+  imgModel
+      .find()
+      .skip((perPage * page) - perPage)
+      .limit(perPage)
+      .exec((err, items) => {
+        imgModel.countDocuments((err, count) => {
+          if (err) return next(err);
+          res.render('lists', {
+            items,
+            current: page,
+            pages: Math.ceil(count / perPage)
+          });
+        });
+      });
 });
 router.get('/upload', function(req, res, next) {
   res.render('upload', { title: 'Upload' });
@@ -68,12 +89,9 @@ router.post('/upload', imageUpload.single('image'),function(req, res, next) {
     title: req.body.name,
     desc: req.body.desc,
     img: {
-//       url: path.join(__dirname, '../' + '/public/upload/' + req.file.filename),
-//       contentType: req.file.mimetype,
-//       thumbnail: path.join(__dirname, '../' + '/public/upload/150x150-' + req.file.filename)
-      url: './public/upload/' + req.file.filename,
+      url: 'public/upload/' + req.file.filename,
       contentType: req.file.mimetype,
-      thumbnail: './public/upload/150x150-' + req.file.filename
+      thumbnail: 'public/upload/150x150-' + req.file.filename
     },
     createDate: Date.now()
   }
