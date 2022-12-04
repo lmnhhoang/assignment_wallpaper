@@ -141,4 +141,18 @@ router.post('/upload', imageUpload.single('image'),function(req, res, next) {
   //   }
   // });
 });
+router.get('/lists_json/:page', function(req, res, next) {
+  let perPage = 10;
+  let page = req.params.page || 1;
+  imgModel
+      .find()
+      .skip((perPage * page) - perPage)
+      .limit(perPage)
+      .exec((err, items) => {
+        imgModel.countDocuments((err, count) => {
+          if (err) return next(err);
+          res.send({items: items,currentPage: page});
+        });
+      });
+});
 module.exports = router;
