@@ -59,8 +59,9 @@ router.get('/upload', function(req, res, next) {
 router.post('/upload', imageUpload.single('image'),function(req, res, next) {
   sharp(req.file.path).resize(150, 150).toFile('./public/upload/'+ '150x150-'+req.file.filename, function(err) {
     if (err) {
-      console.error('sharp error>>>', err);
+      console.error('sharp>>>', err);
     }
+    console.log('ok okoko')
   })
   var obj = {
     id: req.body.id,
